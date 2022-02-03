@@ -35,7 +35,12 @@ case "${1-}" in
 			steamcmd.sh \
 			+login anonymous \
 			+app_info_print 600760 \
-			+quit
+			+quit | sed \
+				-e '1,/600762/d' \
+				-e '1,/manifests/d' \
+				-e '/maxsize/,$d' | grep \
+					--perl-regexp \
+					--only 'public"\h+"\K\d+'
 	;;
 	# Build if it does not exist and push image to docker hub
 	"--upload")
