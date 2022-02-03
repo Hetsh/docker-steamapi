@@ -34,6 +34,7 @@ case "${1-}" in
 			"$IMG_NAME:test" \
 			steamcmd.sh \
 			+login anonymous \
+			+app_info_print 600760 \
 			+quit
 	;;
 	# Build if it does not exist and push image to docker hub
