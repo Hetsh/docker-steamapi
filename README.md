@@ -1,27 +1,25 @@
-# SteamCMD
-Small image equipped with steamcmd, intended to be a foundation for game servers.
+# SteamAPI
+Latest Steam command line client intended to query the Steam API.
 
 ## Use it
-To use this image as a foundation for a game server, simply include it in your Dockerfile:
-```Dockerfile
-FROM hetsh/steamcmd:<version>
+SteamCMD is included in `PATH` so you can call it like this:
+```bash
+docker run --rm hetsh/steamapi steamcmd.sh +login anonymous +app_info_print 600760 +quit
 ```
-`steamcmd.sh` can then be called from everywhere since it is included in `PATH`.
+All available commands can be found in the [developer wiki](https://developer.valvesoftware.com/wiki/Command_Line_Options).
 
-## Ignored Errors
-SteamCMD emits a few error and warning messages during different stages of execution despite working properly.
-Some can be fixed by adding the "required" libraries, but this would increase the image size by a lot.
-For this case, i made the decision to not include them for now, but you can install the libraries if you want:
-```Dockerfile
-RUN DEBIAN_FRONTEND="noninteractive" && apt-get install --no-install-recommends --assume-yes <package>
+## Creating persistent storage
+To keep the login information, you need to create a writeable directory:
+```bash
+MP="/path/to/storage"
+mkdir -p "$MP"
+chown -R 1379:1379 "$MP"
 ```
-
-### [#1](https://github.com/Hetsh/docker-steamcmd/issues/1) Missing libsdl
-> Failed to init SDL priority manager: SDL not found  
-> Failed to set thread priority: per-thread setup failed  
-> Failed to set thread priority: per-thread setup failed  
-
-The debian package is `libsdl2-2.0-0`.
+`1379` is the numerical id of the user running the server (see [Dockerfile](https://github.com/Hetsh/docker-stationeers/blob/master/Dockerfile)).
+Start the server with the additional mount flag:
+```bash
+docker run --mount type=bind,source=/path/to/storage,target=/home/steam ...
+```
 
 ## Fork Me!
 This is an open project (visit [GitHub](https://github.com/Hetsh/docker-steamcmd)).
