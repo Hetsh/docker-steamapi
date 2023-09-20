@@ -1,4 +1,4 @@
-FROM hetsh/steamcmd:20230904-1
+FROM hetsh/steamcmd:20230919-1
 
 # App user
 ARG APP_USER="steam"
